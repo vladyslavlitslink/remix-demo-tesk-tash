@@ -5,25 +5,10 @@ import {AlertProps} from '@mui/material';
 
 import {Notification, NotificationProps} from './notification';
 
-//
-//
-
-declare module 'notistack' {
-  interface VariantOverrides {
-    default: SnackNotificationProps;
-    warning: SnackNotificationProps;
-    success: SnackNotificationProps;
-    info: SnackNotificationProps;
-    error: SnackNotificationProps;
-  }
-}
-
 interface SnackNotificationProps extends NotificationProps {
   noClose?: boolean;
   alertProps?: AlertProps;
 }
-
-//
 
 export const SnackNotification = React.forwardRef<
   HTMLDivElement,

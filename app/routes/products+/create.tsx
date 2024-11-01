@@ -79,13 +79,15 @@ export default function ProductsCreate() {
     const response = await mutate.mutateAsync({payload});
 
     if (response?.errors?.length) {
-      enqueueSnackbar({
+      enqueueSnackbar(response?.meta?.message || 'An error occurred', {
+        variant: 'error',
         heading: response?.meta?.message,
         messages: response?.errors,
-        variant: 'error',
       });
     } else if (response?.result?.productId) {
-      enqueueSnackbar({messages: response.meta?.message, variant: 'success'});
+      enqueueSnackbar(response.meta?.message || 'Product created successfully', {
+        variant: 'success',
+      });
       navigate('/products', {viewTransition: true});
     }
   });
