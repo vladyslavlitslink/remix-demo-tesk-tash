@@ -1,44 +1,67 @@
-import {useTranslation} from 'react-i18next';
-import type {MetaFunction} from '@remix-run/node';
+import React, {useState} from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
-import {Grid2, Typography} from '@mui/material';
+import {useMediaQuery, Grid, CircularProgress} from '@mui/material';
+import {useTheme} from '@mui/material/styles';
 
-import {useQueryProfile} from '~/services/auth';
+import ProductCard from '~/global/components/product-card/ProductCard';
+import ProductTable from '~/global/components/product-table/ProductTable';
 
-import {AppLink} from '~/global/components/app-link';
+import {products as allProducts} from '~/data/products/products';
 
-import {ApiResponse, ApiUser} from '~/api-client/types';
+const Index: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-//
-//
+  const ITEMS_PER_PAGE = 20;
 
-export const meta: MetaFunction = () => [{title: 'Remix App'}];
+  const [items, setItems] = useState(allProducts.slice(0, ITEMS_PER_PAGE));
+  const [hasMore, setHasMore] = useState(true);
 
-//
-//
+  const fetchMoreData = () => {
+    if (items.length >= allProducts.length) {
+      setHasMore(false);
 
-export default function Index() {
-  const {t} = useTranslation();
-  const {data} = useQueryProfile({enabled: !!window.localStorage.getItem('_at')});
+      return;
+    }
+
+    setTimeout(() => {
+      const nextItems = allProducts.slice(items.length, items.length + ITEMS_PER_PAGE);
+      setItems(prevItems => [...prevItems, ...nextItems]);
+    }, 2000);
+  };
 
   return (
-    <Grid2
-      container
-      direction="column"
-      spacing={6}
-      alignContent="center"
-      alignItems="center"
-      mt="15%"
-    >
-      <Typography variant="h3" align="center" sx={{fontWeight: 500}}>
-        {t('hello')}
-      </Typography>
-
-      <AppLink
-        to={(data as unknown as ApiResponse<ApiUser>)?.result?.userId ? '/products' : '/sign-in'}
-      >
-        <Typography variant="h5">Get Started</Typography>
-      </AppLink>
-    </Grid2>
+    <div style={{padding: theme.spacing(2)}}>
+      {isMobile ? (
+        <InfiniteScroll
+          dataLength={items.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={
+            <div style={{textAlign: 'center', padding: theme.spacing(2)}}>
+              <CircularProgress />
+            </div>
+          }
+          endMessage={
+            <p style={{textAlign: 'center'}}>
+              <b>You have seen all products</b>
+            </p>
+          }
+        >
+          <Grid container spacing={2} justifyContent="center">
+            {items.map(product => (
+              <Grid item xs={12} sm={6} key={product.id}>
+                <ProductCard product={product} />
+              </Grid>
+            ))}
+          </Grid>
+        </InfiniteScroll>
+      ) : (
+        <ProductTable products={allProducts} />
+      )}
+    </div>
   );
-}
+};
+
+export default Index;
