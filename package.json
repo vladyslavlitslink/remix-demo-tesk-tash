@@ -36,6 +36,7 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.1",
     "react-i18next": "^15.1.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-query-kit": "^3.3.1",
     "remix-custom-routes": "^1.0.1",
     "remix-i18next": "^6.4.1",
