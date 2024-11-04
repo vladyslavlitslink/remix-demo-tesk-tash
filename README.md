@@ -1,4 +1,3 @@
-````markdown
 # Material UI - Remix Example in TypeScript
 
 ## How to use
@@ -20,4 +19,3 @@ npm run dev
 ## Test Assignment Details
 
 This project was completed as a part of the test assignment provided in [this document](https://homaily.notion.site/React-Front-End-Assignment-12fdbad91f0b80929b64eda6c6d955a0).
-````
